@@ -15,10 +15,56 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('GET /private/1 auth check -http 401 no auth', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/private/1')
+      .expect(401)
+      .expect('Please authorize');
+  });
+
+  it('GET /private/1 auth check - http200 auth', () => {
+    return request(app.getHttpServer())
+      .get('/private/1')
       .expect(200)
-      .expect('Hello World!');
+      .expect('Private Ok');
+  });
+
+  it('GET /public/1 - http200, no auth', () => {
+    return request(app.getHttpServer())
+      .get('/public/1')
+      .expect(200)
+      .expect('Public Ok - 1');
+  });
+
+  it('GET /private/1 - http429 check for token limit', () => {
+    return request(app.getHttpServer())
+      .get('/public/1')
+      .expect(429)
+      .expect('Private token limit - time xxx');
+  });
+
+  it('GET /public/1 - http429 check for ip limit', () => {
+    return request(app.getHttpServer())
+      .get('/public/1')
+      .expect(429)
+      .expect('Public ip limit - time xxx');
+  });
+
+  it('GET /private/{N} - concurrent request', () => {
+    return request(app.getHttpServer())
+      .get('/private/1')
+      .expect(429)
+      .expect('Private token limit - time xxx');
+  });
+
+  it('GET /private/{N} - request weight limit points 1/2/5', () => {
+    return request(app.getHttpServer())
+      .get('/private/1')
+      .expect(429)
+      .expect('Private token limit - time xxx');
   });
 });
