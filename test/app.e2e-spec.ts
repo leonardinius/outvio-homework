@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { ConfigService } from '@nestjs/config';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  let authToken: string;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -12,6 +14,8 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    const config = app.get<ConfigService>(ConfigService);
+    authToken = config.get<string>('auth.token');
     await app.init();
   });
 
@@ -19,25 +23,23 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('GET /private/1 auth check -http 401 no auth', () => {
+  it('GET /private/1 auth check - http 401 no auth', () => {
     return request(app.getHttpServer())
       .get('/private/1')
-      .expect(401)
-      .expect('Please authorize');
+      .expect(401, '{"statusCode":401,"message":"Unauthorized"}');
   });
 
   it('GET /private/1 auth check - http200 auth', () => {
     return request(app.getHttpServer())
       .get('/private/1')
-      .expect(200)
-      .expect('Private Ok');
+      .set('Authentication', authToken)
+      .expect(200, 'Private Ok - 1');
   });
 
   it('GET /public/1 - http200, no auth', () => {
     return request(app.getHttpServer())
       .get('/public/1')
-      .expect(200)
-      .expect('Public Ok - 1');
+      .expect(200, 'Public Ok - 1');
   });
 
   it('GET /private/1 - http429 check for token limit', () => {

@@ -1,5 +1,11 @@
 # How to Run locally
 
+[//]: # (TODO: Docker)
+[//]: # (TODO: config)
+[//]: # (TODO: tests point by point)
+[//]: # (TODO: style formatting)
+[//]: # (TODO: Readme - howto)
+
 
 ```bash
 $ npm install

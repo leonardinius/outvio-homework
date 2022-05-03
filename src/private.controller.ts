@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 
-@Controller('public')
+@Controller('private')
 export class PrivateController {
   // TODO: remove
   //constructor(private readonly appService: PubService) {}

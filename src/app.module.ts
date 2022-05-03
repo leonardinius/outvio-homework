@@ -1,9 +1,17 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { PubController } from './pub.controller';
+import { PrivateController } from './private.controller';
+import { AuthMiddleware } from './auth.middleware';
+import configuration from './config/configuration';
 
 @Module({
-  imports: [],
-  controllers: [PubController],
+  imports: [ConfigModule.forRoot({ load: [configuration] })],
+  controllers: [PubController, PrivateController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('private');
+  }
+}
