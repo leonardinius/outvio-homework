@@ -4,14 +4,14 @@ import { Request } from 'express';
 import { RateLimitMiddleware } from './ratelimit.middleware.service';
 import { ConfigService } from '@nestjs/config';
 import { ThrottlerService } from './throttler.service';
-import { RedisRateLimitStorageService } from './redis-storage.service';
+import { RateLimitStorageService } from './redis-storage.service';
 
 @Injectable()
 export class IpRateLimitMiddleware extends RateLimitMiddleware {
   constructor(private configService: ConfigService) {
     super(
       new IpRequestTracker(),
-      new ThrottlerService(new RedisRateLimitStorageService()),
+      new ThrottlerService(new RateLimitStorageService()),
       configService.get<number>('RATELIMIT_IP_HOUR_LIMIT'),
     );
   }
