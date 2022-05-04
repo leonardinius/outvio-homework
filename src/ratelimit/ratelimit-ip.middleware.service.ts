@@ -11,8 +11,8 @@ export class IpRateLimitMiddleware extends RateLimitMiddleware {
     super(
       new IpRequestTracker(),
       new RateLimitStorageService(),
-      configService.get<number>('RATELIMIT_IP_LIMIT'),
-      configService.get<number>('RATELIMIT_IP_LIMIT_PERIOD'),
+      parseInt(configService.get<string>('RATELIMIT_IP_LIMIT')),
+      parseInt(configService.get<string>('RATELIMIT_IP_LIMIT_PERIOD')),
     );
   }
 }

@@ -1,4 +1,5 @@
 import {
+  HttpStatus,
   Injectable,
   NestMiddleware,
   UnauthorizedException,
@@ -10,15 +11,15 @@ export const AUTH_TOKEN_HEADER_NAME = 'Authentication';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private configService: ConfigService) {}
+  private validTokens: string[];
+  constructor(private configService: ConfigService) {
+    this.validTokens = this.configService.get<string>('AUTH_TOKENS').split(',');
+  }
 
   use(req: Request, res: Response, next: NextFunction) {
-    const validToken = this.configService.get<string>('AUTH_TOKEN');
-
-    if (req.header(AUTH_TOKEN_HEADER_NAME) != validToken) {
-      // res.status(HttpStatus.UNAUTHORIZED).send('Unauthorized.');
-      // return;
-      throw new UnauthorizedException();
+    if (!this.validTokens.includes(req.header(AUTH_TOKEN_HEADER_NAME))) {
+      return res.status(HttpStatus.UNAUTHORIZED).send('Unauthorized');
+      // throw new UnauthorizedException();
     }
     next();
   }

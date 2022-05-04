@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, NestMiddleware } from '@nestjs/common';
+import { HttpStatus, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { RequestTracker } from './tracker.interface';
 import { RateLimitStorage } from './storage.interface';
@@ -16,26 +16,29 @@ export abstract class RateLimitMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const throttleKey = this.tracker.trackerKey(req);
-    const currentTTL = Math.ceil(this.clock.now() / 1000 + this.period);
     const storedTTLs = await this.storage.get(throttleKey);
     const nearestExpiryTime =
       storedTTLs.length > 0
-        ? Math.ceil((storedTTLs[0] - Date.now()) / 1000)
+        ? Math.ceil((storedTTLs[0] - this.clock.now()) / 1000)
         : 0;
     const remaining = Math.max(0, this.limit - storedTTLs.length - 1);
 
     res.header('X-RateLimit-Limit', '' + this.limit);
     res.header('X-RateLimit-Period', '' + this.period);
     if (storedTTLs.length >= this.limit) {
-      res.header('Retry-After', '' + nearestExpiryTime);
-      throw new HttpException(
-        'Too many requests (see X-RateLimit-* headers)',
-        HttpStatus.TOO_MANY_REQUESTS,
-      );
+      return res
+        .header('Retry-After', '' + nearestExpiryTime)
+        .status(HttpStatus.TOO_MANY_REQUESTS)
+        .send({
+          message: 'Too Many requests',
+          'retry-after': `${nearestExpiryTime}`,
+          limit: `${this.limit}`,
+          period: `${this.period}`,
+        });
     }
     res.header('X-RateLimit-Remaining', '' + remaining);
     res.header('X-RateLimit-Reset', '' + nearestExpiryTime);
-    await this.storage.store(throttleKey, currentTTL);
+    await this.storage.store(throttleKey, this.period);
 
     next();
   }

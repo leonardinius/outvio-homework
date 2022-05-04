@@ -3,6 +3,7 @@ import { RateLimitStorage } from './storage.interface';
 import { Injectable } from '@nestjs/common';
 import { SystemClock } from '../clock/system-clock.class';
 import { Clock } from '../clock/clock.interface';
+import { clearTimeout } from 'timers';
 
 @Injectable()
 export class RateLimitStorageService implements RateLimitStorage {

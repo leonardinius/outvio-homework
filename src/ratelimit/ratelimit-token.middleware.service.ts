@@ -12,8 +12,8 @@ export class TokenRateLimitMiddleware extends RateLimitMiddleware {
     super(
       new TokenRequestTracker(),
       new RateLimitStorageService(),
-      configService.get<number>('RATELIMIT_TOKEN_LIMIT'),
-      configService.get<number>('RATELIMIT_TOKEN_LIMIT_PERIOD'),
+      parseInt(configService.get<string>('RATELIMIT_TOKEN_LIMIT')),
+      parseInt(configService.get<string>('RATELIMIT_TOKEN_LIMIT_PERIOD')),
     );
   }
 }
