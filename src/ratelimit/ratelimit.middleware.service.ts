@@ -5,14 +5,24 @@ import { RateLimitStorage } from './storage.interface';
 import { SystemClock } from '../clock/system-clock.class';
 import { Clock } from '../clock/clock.interface';
 
+export interface ThrottleLimits {
+  limit: number;
+  period: number;
+}
+
 export abstract class RateLimitMiddleware implements NestMiddleware {
+  private readonly limit: number;
+  private readonly period: number;
+
   protected constructor(
     private tracker: RequestTracker,
     private storage: RateLimitStorage,
-    private limit: number,
-    private period: number,
+    config: ThrottleLimits,
     private clock: Clock = new SystemClock(),
-  ) {}
+  ) {
+    this.limit = config.limit;
+    this.period = config.period;
+  }
 
   async use(req: Request, res: Response, next: NextFunction) {
     const throttleKey = this.tracker.trackerKey(req);
@@ -21,8 +31,8 @@ export abstract class RateLimitMiddleware implements NestMiddleware {
       storedTTLs.length > 0
         ? Math.ceil((storedTTLs[0] - this.clock.now()) / 1000)
         : 0;
-    const remaining = Math.max(0, this.limit - storedTTLs.length - 1);
 
+    const remaining = Math.max(0, this.limit - storedTTLs.length - 1);
     res.header('X-RateLimit-Limit', '' + this.limit);
     res.header('X-RateLimit-Period', '' + this.period);
     if (storedTTLs.length >= this.limit) {

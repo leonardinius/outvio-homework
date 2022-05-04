@@ -4,11 +4,15 @@ import { ConfigService } from '@nestjs/config';
 
 export const AUTH_TOKEN_HEADER_NAME = 'Authentication';
 
+export interface AuthTokens {
+  tokens: string[];
+}
+
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   private validTokens: string[];
   constructor(private configService: ConfigService) {
-    this.validTokens = this.configService.get<string>('AUTH_TOKENS').split(',');
+    this.validTokens = this.configService.get<AuthTokens>('auth').tokens;
   }
 
   use(req: Request, res: Response, next: NextFunction) {

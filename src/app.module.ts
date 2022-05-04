@@ -5,9 +5,14 @@ import { PrivateController } from './private.controller';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { TokenRateLimitMiddleware } from './ratelimit/ratelimit-token.middleware.service';
 import { IpRateLimitMiddleware } from './ratelimit/ratelimit-ip.middleware.service';
+import configuration from './config/configuration';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+    }),
+  ],
   controllers: [PubController, PrivateController],
   providers: [],
 })

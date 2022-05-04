@@ -1,0 +1,12 @@
+auth:
+  tokens:
+   - token1
+   - token2
+
+ratelimit:
+  token:
+    limit: 200
+    period: 3600
+  ip:
+    limit: 100
+    period: 3600

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { RequestKey, RequestTracker } from './tracker.interface';
 import { Request } from 'express';
-import { RateLimitMiddleware } from './ratelimit.middleware.service';
+import {
+  RateLimitMiddleware,
+  ThrottleLimits,
+} from './ratelimit.middleware.service';
 import { AUTH_TOKEN_HEADER_NAME } from '../auth/auth.middleware';
 import { ConfigService } from '@nestjs/config';
 import { RateLimitStorageService } from './storage-inmem.service';
@@ -12,8 +15,7 @@ export class TokenRateLimitMiddleware extends RateLimitMiddleware {
     super(
       new TokenRequestTracker(),
       new RateLimitStorageService(),
-      parseInt(configService.get<string>('RATELIMIT_TOKEN_LIMIT')),
-      parseInt(configService.get<string>('RATELIMIT_TOKEN_LIMIT_PERIOD')),
+      configService.get<ThrottleLimits>('ratelimit.token'),
     );
   }
 }
