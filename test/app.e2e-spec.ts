@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
@@ -46,11 +46,11 @@ describe('AppController (e2e)', () => {
       .expect(200, 'Private Ok - 1');
   });
 
-  it('GET /private/1 auth token2 - http200 auth', () => {
+  it('GET /private/2 auth token2 - http200 auth', () => {
     return request(app.getHttpServer())
-      .get('/private/1')
+      .get('/private/2')
       .set('Authentication', authToken2)
-      .expect(200, 'Private Ok - 1');
+      .expect(200, 'Private Ok - 2');
   });
 
   it('GET /public/1 - http200, no auth', () => {
@@ -75,7 +75,7 @@ describe('AppController (e2e)', () => {
       .expect(429)
       .expect({
         message: 'Too Many requests',
-        'retry-after': `${tokenPeriod}`,
+        'retry-after-seconds': `${tokenPeriod}`,
         limit: `${tokenLimit}`,
         period: `${tokenPeriod}`,
       });
@@ -97,7 +97,7 @@ describe('AppController (e2e)', () => {
       .expect(429)
       .expect({
         message: 'Too Many requests',
-        'retry-after': `${tokenPeriod}`,
+        'retry-after-seconds': `${tokenPeriod}`,
         limit: `${tokenLimit}`,
         period: `${tokenPeriod}`,
       });
@@ -122,7 +122,7 @@ describe('AppController (e2e)', () => {
       .expect(429)
       .expect({
         message: 'Too Many requests',
-        'retry-after': `${ipPeriod}`,
+        'retry-after-seconds': `${ipPeriod}`,
         limit: `${ipLimit}`,
         period: `${ipPeriod}`,
       });
@@ -142,7 +142,7 @@ describe('AppController (e2e)', () => {
       .expect(429)
       .expect({
         message: 'Too Many requests',
-        'retry-after': `${ipPeriod}`,
+        'retry-after-seconds': `${ipPeriod}`,
         limit: `${ipLimit}`,
         period: `${ipPeriod}`,
       });

@@ -31,7 +31,7 @@ export abstract class RateLimitMiddleware implements NestMiddleware {
         .status(HttpStatus.TOO_MANY_REQUESTS)
         .send({
           message: 'Too Many requests',
-          'retry-after': `${nearestExpiryTime}`,
+          'retry-after-seconds': `${nearestExpiryTime}`,
           limit: `${this.limit}`,
           period: `${this.period}`,
         });
