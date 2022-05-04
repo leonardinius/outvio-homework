@@ -4,16 +4,16 @@ import { Request } from 'express';
 import { RateLimitMiddleware } from './ratelimit.middleware.service';
 import { AUTH_TOKEN_HEADER_NAME } from '../auth/auth.middleware';
 import { ConfigService } from '@nestjs/config';
-import { ThrottlerService } from './throttler.service';
-import { RateLimitStorageService } from './redis-storage.service';
+import { RateLimitStorageService } from './storage-inmem.service';
 
 @Injectable()
 export class TokenRateLimitMiddleware extends RateLimitMiddleware {
   constructor(private configService: ConfigService) {
     super(
       new TokenRequestTracker(),
-      new ThrottlerService(new RateLimitStorageService()),
-      configService.get<number>('RATELIMIT_TOKEN_HOUR_LIMIT'),
+      new RateLimitStorageService(),
+      configService.get<number>('RATELIMIT_TOKEN_LIMIT'),
+      configService.get<number>('RATELIMIT_TOKEN_LIMIT_PERIOD'),
     );
   }
 }
