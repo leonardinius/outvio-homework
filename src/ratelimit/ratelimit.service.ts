@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RateLimitStorage } from './storage.interface';
+import { RequestKey } from './tracker.interface';
 
 @Injectable()
 export class RateLimitService {
@@ -9,11 +10,11 @@ export class RateLimitService {
     this.storage = storage;
   }
 
-  public ttl(requestKey: string): Promise<number[]> {
+  public ttl(requestKey: RequestKey): Promise<number[]> {
     return this.storage.get(requestKey);
   }
 
-  public store(requestKey: string, ttl: number): Promise<void> {
+  public store(requestKey: RequestKey, ttl: number): Promise<void> {
     return this.storage.store(requestKey, ttl);
   }
 }

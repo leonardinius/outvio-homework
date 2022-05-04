@@ -1,5 +1,7 @@
-export interface RateLimitStorage {
-  get(requestKey: string): Promise<number[]>;
+import { RequestKey } from './tracker.interface';
 
-  store(requestKey: string, ttl: number): Promise<void>;
+export interface RateLimitStorage {
+  get(requestKey: RequestKey): Promise<number[]>;
+
+  store(requestKey: RequestKey, ttl: number): Promise<void>;
 }

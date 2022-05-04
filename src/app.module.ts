@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PubController } from './pub.controller';
 import { PrivateController } from './private.controller';
 import { AuthMiddleware } from './auth/auth.middleware';
+import { TokenRateLimitMiddleware } from './ratelimit/ratelimit-token.middleware.service';
+import { IpRateLimitMiddleware } from './ratelimit/ratelimit-ip.middleware.service';
 
 @Module({
   imports: [ConfigModule.forRoot()],
@@ -11,6 +13,9 @@ import { AuthMiddleware } from './auth/auth.middleware';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('private');
+    consumer
+      .apply(AuthMiddleware, TokenRateLimitMiddleware)
+      .forRoutes('private');
+    consumer.apply(IpRateLimitMiddleware).forRoutes('public');
   }
 }

@@ -6,6 +6,8 @@ import {
 import { NextFunction, Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
+export const AUTH_TOKEN_HEADER_NAME = 'Authentication';
+
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(private configService: ConfigService) {}
@@ -13,7 +15,7 @@ export class AuthMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const validToken = this.configService.get<string>('AUTH_TOKEN');
 
-    if (req.header('Authentication') != validToken) {
+    if (req.header(AUTH_TOKEN_HEADER_NAME) != validToken) {
       // res.status(HttpStatus.UNAUTHORIZED).send('Unauthorized.');
       // return;
       throw new UnauthorizedException();
