@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PubController } from './pub.controller';
 import { PrivateController } from './private.controller';
 
 describe('PrivateController', () => {

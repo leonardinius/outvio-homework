@@ -5,6 +5,7 @@
 [//]: # (TODO: tests point by point)
 [//]: # (TODO: style formatting)
 [//]: # (TODO: Readme - howto)
+[//]: # (TODO: cleanup used libraries)
 
 
 ```bash

@@ -15,7 +15,7 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     const config = app.get<ConfigService>(ConfigService);
-    authToken = config.get<string>('auth.token');
+    authToken = config.get<string>('AUTH_TOKEN');
     await app.init();
   });
 
