@@ -3,7 +3,7 @@ import { RateLimitStorage } from './storage.interface';
 import { RequestKey } from './tracker.interface';
 
 @Injectable()
-export class RateLimitService {
+export class ThrottlerService {
   private storage: RateLimitStorage;
 
   constructor(storage: RateLimitStorage) {

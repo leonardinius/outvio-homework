@@ -5,6 +5,7 @@ import { PrivateController } from './private.controller';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { TokenRateLimitMiddleware } from './ratelimit/ratelimit-token.middleware.service';
 import { IpRateLimitMiddleware } from './ratelimit/ratelimit-ip.middleware.service';
+import { ThrottlerService } from './ratelimit/throttler.service';
 
 @Module({
   imports: [ConfigModule.forRoot()],
