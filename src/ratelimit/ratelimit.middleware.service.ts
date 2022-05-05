@@ -50,6 +50,6 @@ export abstract class RateLimitMiddleware implements NestMiddleware {
     res.header('X-RateLimit-Reset', '' + nearestExpiryTime);
     await this.storage.store(throttleKey, this.period);
 
-    next();
+    return next();
   }
 }

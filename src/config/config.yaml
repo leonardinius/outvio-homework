@@ -1,7 +1,6 @@
-# Normally this file would be .gitignore and secrets
-# For the sake of this exercise, I assume it is fine to store it plaintext here
-
 auth:
+  # TODO: Normally this file would be .gitignore and secrets
+  # For the sake of this exercise, I assume it is fine to store it plaintext here
   tokens:
    - Wu9Mae7U
    - ohwe9Sec

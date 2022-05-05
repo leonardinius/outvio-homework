@@ -5,8 +5,8 @@ auth:
 
 ratelimit:
   private_token:
-    limit: 5
+    limit: 3
     period: 10
   public_ip:
-    limit: 6
+    limit: 5
     period: 10

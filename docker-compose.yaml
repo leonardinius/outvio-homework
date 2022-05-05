@@ -1,0 +1,13 @@
+services:
+  prod:
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    networks:
+      - nestjs-network
+
+networks:
+  nestjs-network: {}

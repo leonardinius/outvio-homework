@@ -25,21 +25,106 @@
 > Output:
 > - Source code of the implementation
 
-## How to Run locally
+## Summary, Guide to the homework
 
-[//]: # (TODO: Docker, production like setup)
-[//]: # (TODO: config for prod not in .gitignore)
-[//]: # (TODO: tests point by point)
-[//]: # (TODO: redis?)
-[//]: # (TODO: style formatting)
-[//]: # (TODO: Readme - howto)
-[//]: # (TODO: cleanup used libraries)
+The minimal MVP of the task, using NestJS framework.
+Included:
+- task 10 points
+- e2e tests, tdd by these (see `How to run test suite`)
+- few unit tests
+- Docker, docker-compose setup
+- few Shell scripts for system acceptance (see `System E2E shell tests`)
 
-```shell
-npm install  \
-  && npm run build \
-  && npm run start:prod
+Not included:
+- database (redis, mongo) ratelimit counter storage.
+
+## Known issues & shortcuts
+
+- The code _likely_ is not idiomatic Typescript, these are literally first lines of Typescript in my life. 
+  I expect there may be also violations of module / filename naming; tried to be consistent with 
+  the nestjs starter app, can not judge how well succeed.  
+  Really enjoyed it though and Nest.js is 🔥, liked it more than Java Spring / Spring Boot.
+- Dependency injection: the solution I came by feels "dirty" & shortcut, 
+  e.g. the fact I created separate classes for public & private routes and way env variables 
+  are retrieved in constructor and e2e tests. This part could be improved.
+- Operations: put configuration to src/config/config.yaml, committed to VCS. 
+  In real life would store the tokens in encrypted secrets or secrets service (eg AWS KMS).
+- Used in memory storage for the ratelimit counters.
+  For distributed mService I would insist on using redis as backend for storage, 
+  or better yet to not implement that at all and put API Gateway (eg Kong) in front of service.
+- When run e2e tests, was required to use `--forceExit --detectOpenHandles`, 
+  google found multiple cases with no clear goto solution how to troubleshoot that efficiently.
+  It likely points to some potential issue/hole in my async ratelimit middleware, 
+  could not locate the root cause yet.
+  Would not leave it for production, however worth to mention here. 
+
+## Code structure
+
+```text
+src
+├── app.module.ts                 # app main module
+├── auth                          # private token middleware
+│   └── auth.middleware.ts
+├── clock                         # utility for clock/time, to swap out in tests
+│   ├── clock.interface.ts 
+│   ├── system-clock.class.ts
+│   └── test-clock.class.ts
+├── config                        # configuration in yaml files
+│   ├── config-dev.yaml
+│   ├── config-test.yaml
+│   ├── config.yaml
+│   └── configuration.ts
+├── main.ts                       # app entry point
+├── private.controller.spec.ts    # below controllers and unit tests for these
+├── private.controller.ts
+├── pub.controller.spec.ts
+├── pub.controller.ts
+└── ratelimit                     # rate limit middleware
+    ├── ratelimit-ip.middleware.service.ts             # private token ratelimit
+    ├── ratelimit-token.middleware.service.ts          # public ip ratelimit
+    ├── ratelimit.middleware.service.ts                # reusable base class / base service
+    ├── storage-inmem.service.ts                       # in memory storage 
+    ├── storage-inmem.spec.ts
+    ├── storage.interface.ts
+    └── tracker.interface.ts                           # request to ratelimit key interface
 ```
+## How to run locally
+
+### How to run test suite
+
+Please note, the e2e contains the minimal set of acceptance criteria for the task.
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+```
+
+### How to run natively on the host
+
+
+```bash
+# development
+$ npm install && npm run start
+
+# or in production mode
+$ npm install && npm run build && npm run start:prod
+```
+
+### How to run in docker
+
+```bash
+$ docker compose build 
+$ docker compose up
+```
+
+## System E2E shell tests {#system-shell-tests}
+
+### Private token demo
+
+Run the following
 
 ```shell
 echo "Private token demo, token Wu9Mae7U"
@@ -53,6 +138,23 @@ echo "Now try with different token ohwe9Sec"
 curl -H 'Authentication: ohwe9Sec' 'http://127.0.0.1:3000/private/1' && echo;
 ``` 
 
+The expected outcome
+```text
+...
+199
+Private Ok - 1
+200
+Private Ok - 1
+Next request, same token - should be denied
+{"message":"Too Many requests","retry-after-seconds":"3599","limit":"200","period":"3600"}
+Now try with different token ohwe9Sec
+Private Ok - 1
+```
+
+### Public IP demo
+
+Run the following:
+
 ```shell
 echo "Public IP demo"
 for i in $(seq 1 100); do 
@@ -63,30 +165,25 @@ echo "Next request, same IP"
 curl 'http://127.0.0.1:3000/public/1' && echo;
 ``` 
 
-```bash
-$ npm install
+Expected outcome:
+
+```text
+..
+99
+Public Ok - 1
+100
+Public Ok - 1
+Next request, same IP
+{"message":"Too Many requests","retry-after-seconds":"3600","limit":"100","period":"3600"}
 ```
 
-## Running the app
+## Config
 
-```bash
-# development
-$ npm run start
+See the following files
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```text
+src/config
+├── config-dev.yaml  # local development
+├── config-test.yaml # used in tests
+└──config.yaml       # production
 ```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-```
-
