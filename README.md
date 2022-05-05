@@ -25,12 +25,12 @@
 > Output:
 > - Source code of the implementation
 
-
-# How to Run locally
+## How to Run locally
 
 [//]: # (TODO: Docker, production like setup)
-[//]: # (TODO: config, locayion)
+[//]: # (TODO: config, location)
 [//]: # (TODO: tests point by point)
+[//]: # (TODO: redis?)
 [//]: # (TODO: style formatting)
 [//]: # (TODO: Readme - howto)
 [//]: # (TODO: cleanup used libraries)
@@ -61,8 +61,5 @@ $ npm run test
 
 # e2e tests
 $ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 

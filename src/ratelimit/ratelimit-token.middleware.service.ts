@@ -15,7 +15,7 @@ export class TokenRateLimitMiddleware extends RateLimitMiddleware {
     super(
       new TokenRequestTracker(),
       new RateLimitStorageService(),
-      configService.get<ThrottleLimits>('ratelimit.token'),
+      configService.get<ThrottleLimits>('ratelimit.private_token'),
     );
   }
 }

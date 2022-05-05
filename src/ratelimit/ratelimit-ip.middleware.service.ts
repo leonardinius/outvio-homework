@@ -14,7 +14,7 @@ export class IpRateLimitMiddleware extends RateLimitMiddleware {
     super(
       new IpRequestTracker(),
       new RateLimitStorageService(),
-      configService.get<ThrottleLimits>('ratelimit.ip'),
+      configService.get<ThrottleLimits>('ratelimit.public_ip'),
     );
   }
 }

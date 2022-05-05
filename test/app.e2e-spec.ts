@@ -19,11 +19,9 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     const config = app.get<ConfigService>(ConfigService);
     // FIXME - dependency injection
-    authToken1 = config.get<AuthTokens>('auth').tokens[0];
-    authToken2 = config.get<AuthTokens>('auth').tokens[1];
-    // FIXME - string integer
-    tokenLimits = config.get<ThrottleLimits>('ratelimit.token');
-    ipLimits = config.get<ThrottleLimits>('ratelimit.ip');
+    [authToken1, authToken2] = config.get<AuthTokens>('auth').tokens;
+    tokenLimits = config.get<ThrottleLimits>('ratelimit.private_token');
+    ipLimits = config.get<ThrottleLimits>('ratelimit.public_ip');
 
     await app.init();
   });
@@ -80,7 +78,7 @@ describe('AppController (e2e)', () => {
       });
   });
 
-  // TODO: refactor
+  // TODO: refactor big tests
   it('GET /private/1 - check token1, token2 limits are separate', async () => {
     // spend all rate limit budget
     for (let i = 1; i <= tokenLimits.limit; i++) {
