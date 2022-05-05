@@ -1,4 +1,4 @@
-/config.yaml
+/src/config/config.yaml
 
 # compiled output
 /dist
