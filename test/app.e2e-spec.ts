@@ -9,7 +9,7 @@ import { ThrottleLimits } from '../src/ratelimit/ratelimit.middleware.service';
 describe('AppController (e2e)', () => {
   let app: NestExpressApplication;
   let authToken1, authToken2: string;
-  let tokenLimits, ipLimits: ThrottleLimits;
+  let tokenLimits, ipLimits, ipWeightLimits: ThrottleLimits;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -23,6 +23,7 @@ describe('AppController (e2e)', () => {
     [authToken1, authToken2] = config.get<AuthTokens>('auth').tokens;
     tokenLimits = config.get<ThrottleLimits>('ratelimit.private_token');
     ipLimits = config.get<ThrottleLimits>('ratelimit.public_ip');
+    ipWeightLimits = config.get<ThrottleLimits>('ratelimit.public_ip_weights');
 
     await app.init();
   });
@@ -142,10 +143,24 @@ describe('AppController (e2e)', () => {
       .expect(200, /Public Ok/);
   });
 
-  it('GET /private/{N} - request weight limit points 1/2/5', () => {
-    return request(app.getHttpServer())
-      .get('/private/1')
-      .expect(429)
-      .expect('Private token limit - time xxx');
+  it('GET /weight/{N} - request weight limit points 1/2/5', async () => {
+    const limit = ipWeightLimits.limit;
+    let spend = ipWeightLimits.weights['/weight/1'];
+    await request(app.getHttpServer())
+      .get('/weight/1')
+      .expect(200, /Weight Ok/)
+      .expect('X-RateLimit-Remaining', '' + (limit - spend));
+
+    spend += ipWeightLimits.weights['/weight/2'];
+    await request(app.getHttpServer())
+      .get('/weight/2')
+      .expect(200, /Weight Ok/)
+      .expect('X-RateLimit-Remaining', '' + (limit - spend));
+
+    spend += ipWeightLimits.weights['/weight/5'];
+    await request(app.getHttpServer())
+      .get('/weight/5')
+      .expect(200, /Weight Ok/)
+      .expect('X-RateLimit-Remaining', '' + (limit - spend));
   });
 });

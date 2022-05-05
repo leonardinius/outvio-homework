@@ -8,5 +8,14 @@ ratelimit:
     limit: 3
     period: 10
   public_ip:
-    limit: 5
+    limit: 4
     period: 10
+  public_ip_weights:
+    limit: 11
+    period: 10
+    weights:
+      '/weight/1' : 1
+      '/weight/2' : 2
+      '/weight/3' : 3
+      '/weight/4' : 4
+      '/weight/5' : 5

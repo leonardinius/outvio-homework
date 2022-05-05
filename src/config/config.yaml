@@ -12,3 +12,12 @@ ratelimit:
   public_ip:
     limit: 100
     period: 3600
+  public_ip_weights:
+    limit: 100
+    period: 3600
+    weights:
+      '/weight/1' : 1
+      '/weight/2' : 2
+      '/weight/3' : 3
+      '/weight/4' : 4
+      '/weight/5' : 5

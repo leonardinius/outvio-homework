@@ -14,10 +14,17 @@ export class RateLimitStorageService implements RateLimitStorage {
     return this.ttls[requestKey] || [];
   }
 
-  public async store(requestKey: RequestKey, ttl: number): Promise<void> {
+  public async store(
+    requestKey: RequestKey,
+    weight: number,
+    ttl: number,
+  ): Promise<void> {
     const ttlMilliseconds = ttl * 1000;
+    const expire = this.clock.now() + ttlMilliseconds;
     this.ttls[requestKey] = this.ttls[requestKey] || [];
-    this.ttls[requestKey].push(this.clock.now() + ttlMilliseconds);
+    for (let i = 0; i < weight; i++) {
+      this.ttls[requestKey].push(expire);
+    }
 
     const timeoutId = setTimeout(() => {
       this.ttls[requestKey].shift();

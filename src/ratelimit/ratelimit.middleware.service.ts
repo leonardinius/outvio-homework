@@ -12,6 +12,7 @@ import { Clock } from '../clock/clock.interface';
 export interface ThrottleLimits {
   limit: number;
   period: number;
+  weights?: Record<string, number>;
 }
 
 export abstract class RateLimitMiddleware
@@ -19,6 +20,7 @@ export abstract class RateLimitMiddleware
 {
   private readonly limit: number;
   private readonly period: number;
+  private readonly weights: Record<string, number>;
 
   protected constructor(
     private tracker: RequestTracker,
@@ -28,9 +30,11 @@ export abstract class RateLimitMiddleware
   ) {
     this.limit = config.limit;
     this.period = config.period;
+    this.weights = config.weights || {};
   }
 
   async use(req: Request, res: Response, next: NextFunction) {
+    const weight = this.weights[req.url] || 1;
     const throttleKey = this.tracker.trackerKey(req);
     const storedTTLs = await this.storage.get(throttleKey);
     const nearestExpiryTime =
@@ -38,7 +42,7 @@ export abstract class RateLimitMiddleware
         ? Math.ceil((storedTTLs[0] - this.clock.now()) / 1000)
         : 0;
 
-    const remaining = Math.max(0, this.limit - storedTTLs.length - 1);
+    const remaining = Math.max(0, this.limit - storedTTLs.length - weight);
     res.header('X-RateLimit-Limit', '' + this.limit);
     res.header('X-RateLimit-Period', '' + this.period);
     if (storedTTLs.length >= this.limit) {
@@ -54,7 +58,7 @@ export abstract class RateLimitMiddleware
     }
     res.header('X-RateLimit-Remaining', '' + remaining);
     res.header('X-RateLimit-Reset', '' + nearestExpiryTime);
-    await this.storage.store(throttleKey, this.period);
+    await this.storage.store(throttleKey, weight, this.period);
 
     return next();
   }
