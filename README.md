@@ -35,8 +35,6 @@ Included:
 - few unit tests
 - Docker, docker-compose setup
 - few Shell scripts for system acceptance (see `System E2E shell tests`)
-- ✅ `Concurrency` - the only case there may be a potential for the race condition (to be checked) is 
-  `src/ratelimit/storage-inmem.service.ts:32`
 - `Bonus: keep performance in mind.` - This solution is suitable for setting small limits for the period, 
    as in small hundreds.  
    Since I track request TTLs + weight - will consume lots of RAM (swap or OOM) and increase latency.
@@ -46,6 +44,8 @@ Included:
   - move the storage to something like Redis, 
   - OR, I can interpret the rate limit period as not 'sliding window', but distinct bucket.
     Eg `limit * ((Date.now() % (period * 1000)) / period / 1000)` etc.
+- ✅ `Concurrency` - the only case there may be a potential for the race condition (to be checked) is
+  `src/ratelimit/storage-inmem.service.ts:32`
 - ✅ `Optional task: Create a different weight of request rate for every URL: 1/2/5 points per request (you can assume we have 5 different end points) depending on end point.`
   See `/weight/{N}` endpoints and e2e `GET /weight/{N} - request weight limit points 1/2/5` test. 
 
