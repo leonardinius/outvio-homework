@@ -38,14 +38,14 @@ export abstract class RateLimitMiddleware
     const throttleKey = this.tracker.trackerKey(req);
     const storedTTLs = await this.storage.get(throttleKey);
     const nearestExpiryTime =
-      storedTTLs.length > 0
-        ? Math.ceil((storedTTLs[0] - this.clock.now()) / 1000)
+      storedTTLs.used > 0
+        ? Math.ceil((storedTTLs.ttl - this.clock.now()) / 1000)
         : 0;
 
-    const remaining = Math.max(0, this.limit - storedTTLs.length - weight);
+    const remaining = Math.max(0, this.limit - storedTTLs.used - weight);
     res.header('X-RateLimit-Limit', '' + this.limit);
     res.header('X-RateLimit-Period', '' + this.period);
-    if (storedTTLs.length >= this.limit) {
+    if (storedTTLs.used >= this.limit) {
       return res
         .header('Retry-After', '' + nearestExpiryTime)
         .status(HttpStatus.TOO_MANY_REQUESTS)

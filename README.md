@@ -57,31 +57,35 @@ Not included:
 
 ```text
 src
-├── app.module.ts                                      # app main module
-├── auth                                               # private token middleware
-│   └── auth.middleware.ts                             
-├── clock                                              # utility for clock/time, to swap out in tests
-│   ├── clock.interface.ts                             
-│   ├── system-clock.class.ts                          
-│   └── test-clock.class.ts                            
-├── config                                             # configuration in yaml files
-│   ├── config-dev.yaml                                
-│   ├── config-test.yaml                               
-│   ├── config.yaml                                    
-│   └── configuration.ts                               
-├── main.ts                                            # app entry point
-├── private.controller.spec.ts                         # below controllers and unit tests for these
-├── private.controller.ts                              
-├── pub.controller.spec.ts                             
-├── pub.controller.ts                                  
-└── ratelimit                                          # rate limit middleware
-    ├── ratelimit-ip.middleware.service.ts             # private token ratelimit
-    ├── ratelimit-token.middleware.service.ts          # public ip ratelimit
-    ├── ratelimit.middleware.service.ts                # reusable base class / base service
-    ├── storage-inmem.service.ts                       # in memory storage 
-    ├── storage-inmem.spec.ts
-    ├── storage.interface.ts
-    └── tracker.interface.ts                           # request to ratelimit key interface
+├── app.module.ts                                        # app main module
+├── auth                                                 # private token middleware
+│   └── auth.middleware.ts                               #
+├── clock                                                # utility for clock/time, to swap out in tests
+│   ├── clock.interface.ts                               #
+│   ├── system-clock.class.ts                            #
+│   └── test-clock.class.ts                              #
+├── config                                               # configuration in yaml files
+│   ├── config-dev.yaml                                  #
+│   ├── config-test.yaml                                 #
+│   ├── config.yaml                                      #
+│   └── configuration.ts                                 #
+├── ratelimit                                            # rate limit middleware
+│   ├── ratelimit-ip-url-weights.middleware.service.ts   # weighted url + ublic ip ratelimit
+│   ├── ratelimit-ip.middleware.service.ts               # public ip ratelimit
+│   ├── ratelimit-token.middleware.service.ts            # private token ratelimit
+│   ├── ratelimit.middleware.service.ts                  # reusable base class / base service
+│   ├── storage-inmem.service.ts                         # in memory storage 
+│   ├── storage-inmem.spec.ts                            #
+│   ├── storage.interface.ts                             #
+│   └── tracker.interface.ts                             # request to ratelimit key interface
+├── main.ts                                              # app entry point, below controllers and unit tests for these
+├── private.controller.spec.ts                           #
+├── private.controller.ts                                # private controller
+├── pub.controller.spec.ts                               #
+├── pub.controller.ts                                    # public controller
+├── weight.controller.spec.ts                            #
+└── weight.controller.ts                                 # weight rate limit controller
+
 ```
 ## How to run locally
 
