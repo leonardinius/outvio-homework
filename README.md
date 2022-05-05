@@ -35,18 +35,33 @@
 [//]: # (TODO: Readme - howto)
 [//]: # (TODO: cleanup used libraries)
 
+```shell
+npm install  \
+  && npm run build \
+  && npm run start:prod
+```
 
-echo "Demo for token Wu9Mae7U"
+```shell
+echo "Private token demo, token Wu9Mae7U"
 for i in $(seq 1 200); do 
 echo $i;
 curl -H 'Authentication: Wu9Mae7U' 'http://127.0.0.1:3000/private/1' && echo;
 done
+echo "Next request, same token - should be denied"
 curl -H 'Authentication: Wu9Mae7U' 'http://127.0.0.1:3000/private/1' && echo;
-echo "Token ohwe9Sec" 
+echo "Now try with different token ohwe9Sec" 
 curl -H 'Authentication: ohwe9Sec' 'http://127.0.0.1:3000/private/1' && echo;
+``` 
 
->  curl -H 'Authentication: ohwe9Sec' 'http://127.0.0.1:3000/private/1'
->  curl 'http://127.0.0.1:3000/public/1'
+```shell
+echo "Public IP demo"
+for i in $(seq 1 100); do 
+echo $i;
+curl 'http://127.0.0.1:3000/public/1' && echo;
+done
+echo "Next request, same IP"
+curl 'http://127.0.0.1:3000/public/1' && echo;
+``` 
 
 ```bash
 $ npm install
