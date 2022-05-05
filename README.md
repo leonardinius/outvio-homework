@@ -28,6 +28,7 @@
 ## Summary, Guide to the homework
 
 The minimal MVP of the task, using NestJS framework.
+
 Included:
 - task 10 points (8,9 is discussion-able)
 - e2e tests, tdd by these (see `How to run test suite`)
