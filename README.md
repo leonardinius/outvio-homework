@@ -28,13 +28,25 @@
 ## How to Run locally
 
 [//]: # (TODO: Docker, production like setup)
-[//]: # (TODO: config, location)
+[//]: # (TODO: config for prod not in .gitignore)
 [//]: # (TODO: tests point by point)
 [//]: # (TODO: redis?)
 [//]: # (TODO: style formatting)
 [//]: # (TODO: Readme - howto)
 [//]: # (TODO: cleanup used libraries)
 
+
+echo "Demo for token Wu9Mae7U"
+for i in $(seq 1 200); do 
+echo $i;
+curl -H 'Authentication: Wu9Mae7U' 'http://127.0.0.1:3000/private/1' && echo;
+done
+curl -H 'Authentication: Wu9Mae7U' 'http://127.0.0.1:3000/private/1' && echo;
+echo "Token ohwe9Sec" 
+curl -H 'Authentication: ohwe9Sec' 'http://127.0.0.1:3000/private/1' && echo;
+
+>  curl -H 'Authentication: ohwe9Sec' 'http://127.0.0.1:3000/private/1'
+>  curl 'http://127.0.0.1:3000/public/1'
 
 ```bash
 $ npm install

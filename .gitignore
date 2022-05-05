@@ -1,5 +1,3 @@
-/src/config/config.yaml
-
 # compiled output
 /dist
 /node_modules

@@ -1,18 +1,12 @@
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import * as yaml from 'js-yaml';
 import { join } from 'path';
 
 export default () => {
   const env = process.env.NODE_ENV;
-
-  let configFile: string;
-  switch (env) {
-    case 'production':
-      configFile = 'config.yaml';
-      break;
-    default:
-      configFile = `config-${env}.yaml`;
-      break;
+  let configFile = `config-${env}.yaml`;
+  if (!existsSync(configFile)) {
+    configFile = 'config.yaml';
   }
 
   const path = join(__dirname, configFile);
