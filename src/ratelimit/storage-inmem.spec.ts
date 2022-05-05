@@ -33,6 +33,8 @@ describe('RateLimitStorageService', () => {
       await storageService.store('random-key1', 11);
       await delay(1100);
       const ttl2 = clock.now() + 11 * 1000;
+
+      // we expect the first key to expire and to be removed, the second one should stay
       expect(await storageService.get('random-key1')).toEqual([ttl2]);
     });
   });

@@ -3,11 +3,11 @@ import { RateLimitStorage } from './storage.interface';
 import { Injectable } from '@nestjs/common';
 import { SystemClock } from '../clock/system-clock.class';
 import { Clock } from '../clock/clock.interface';
-import { clearTimeout } from 'timers';
 
 @Injectable()
 export class RateLimitStorageService implements RateLimitStorage {
   private ttls: Record<string, number[]> = {};
+  private timeoutIds = new Set();
   constructor(private clock: Clock = new SystemClock()) {}
 
   public async get(requestKey: RequestKey): Promise<number[]> {
@@ -22,6 +22,13 @@ export class RateLimitStorageService implements RateLimitStorage {
     const timeoutId = setTimeout(() => {
       this.ttls[requestKey].shift();
       clearTimeout(timeoutId);
+      this.timeoutIds.delete(timeoutId);
     }, ttlMilliseconds);
+    this.timeoutIds.add(timeoutId);
+  }
+
+  public async onApplicationShutdown(): Promise<void> {
+    this.timeoutIds.forEach(clearTimeout);
+    this.timeoutIds.clear();
   }
 }

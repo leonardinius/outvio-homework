@@ -1,4 +1,8 @@
-import { HttpStatus, NestMiddleware } from '@nestjs/common';
+import {
+  HttpStatus,
+  NestMiddleware,
+  OnApplicationShutdown,
+} from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { RequestTracker } from './tracker.interface';
 import { RateLimitStorage } from './storage.interface';
@@ -10,7 +14,9 @@ export interface ThrottleLimits {
   period: number;
 }
 
-export abstract class RateLimitMiddleware implements NestMiddleware {
+export abstract class RateLimitMiddleware
+  implements NestMiddleware, OnApplicationShutdown
+{
   private readonly limit: number;
   private readonly period: number;
 
@@ -51,5 +57,9 @@ export abstract class RateLimitMiddleware implements NestMiddleware {
     await this.storage.store(throttleKey, this.period);
 
     return next();
+  }
+
+  async onApplicationShutdown(signal?: string) {
+    await this.storage.onApplicationShutdown();
   }
 }

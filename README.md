@@ -49,14 +49,9 @@ Not included:
   are retrieved in constructor and e2e tests. This part could be improved.
 - Operations: put configuration to src/config/config.yaml, committed to VCS. 
   In real life would store the tokens in encrypted secrets or secrets service (eg AWS KMS).
-- Used in memory storage for the ratelimit counters.
+- Rate limit counters are stored in memory.
   For distributed mService I would insist on using redis as backend for storage, 
   or better yet to not implement that at all and put API Gateway (eg Kong) in front of service.
-- When run e2e tests, was required to use `--forceExit --detectOpenHandles`, 
-  google found multiple cases with no clear goto solution how to troubleshoot that efficiently.
-  It likely points to some potential issue/hole in my async ratelimit middleware, 
-  could not locate the root cause yet.
-  Would not leave it for production, however worth to mention here. 
 
 ## Code structure
 
