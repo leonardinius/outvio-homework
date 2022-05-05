@@ -1,5 +1,4 @@
 import { RequestKey } from './tracker.interface';
-import { OnApplicationShutdown } from '@nestjs/common';
 
 export interface RateLimitStorage {
   get(requestKey: RequestKey): Promise<number[]>;

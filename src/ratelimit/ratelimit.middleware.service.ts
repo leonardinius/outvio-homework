@@ -59,6 +59,7 @@ export abstract class RateLimitMiddleware
     return next();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async onApplicationShutdown(signal?: string) {
     await this.storage.onApplicationShutdown();
   }
