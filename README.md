@@ -39,7 +39,7 @@ Included:
    as in small hundreds.  
    Since I track request TTLs + weight - will consume lots of RAM (swap or OOM) and increase latency.
    tl;dr - setting 200 req/minute - is totally fine.
-   But! Setting 288K/24h (=200*60*24) - **is NOT**.
+   But! Setting 288K/24h (=200\*60\*24) - **is NOT**.
    For that to work I either need to 
   - move the storage to something like Redis, 
   - OR, I can interpret the rate limit period as not 'sliding window', but distinct bucket.
