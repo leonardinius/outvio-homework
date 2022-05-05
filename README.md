@@ -120,7 +120,7 @@ $ docker compose build
 $ docker compose up
 ```
 
-## System E2E shell tests {#system-shell-tests}
+## System E2E shell tests
 
 ### Private token demo
 
@@ -185,5 +185,5 @@ See the following files
 src/config
 ├── config-dev.yaml  # local development
 ├── config-test.yaml # used in tests
-└──config.yaml       # production
+└── config.yaml      # production
 ```
