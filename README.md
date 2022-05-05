@@ -62,24 +62,24 @@ Not included:
 
 ```text
 src
-├── app.module.ts                 # app main module
-├── auth                          # private token middleware
-│   └── auth.middleware.ts
-├── clock                         # utility for clock/time, to swap out in tests
-│   ├── clock.interface.ts 
-│   ├── system-clock.class.ts
-│   └── test-clock.class.ts
-├── config                        # configuration in yaml files
-│   ├── config-dev.yaml
-│   ├── config-test.yaml
-│   ├── config.yaml
-│   └── configuration.ts
-├── main.ts                       # app entry point
-├── private.controller.spec.ts    # below controllers and unit tests for these
-├── private.controller.ts
-├── pub.controller.spec.ts
-├── pub.controller.ts
-└── ratelimit                     # rate limit middleware
+├── app.module.ts                                      # app main module
+├── auth                                               # private token middleware
+│   └── auth.middleware.ts                             
+├── clock                                              # utility for clock/time, to swap out in tests
+│   ├── clock.interface.ts                             
+│   ├── system-clock.class.ts                          
+│   └── test-clock.class.ts                            
+├── config                                             # configuration in yaml files
+│   ├── config-dev.yaml                                
+│   ├── config-test.yaml                               
+│   ├── config.yaml                                    
+│   └── configuration.ts                               
+├── main.ts                                            # app entry point
+├── private.controller.spec.ts                         # below controllers and unit tests for these
+├── private.controller.ts                              
+├── pub.controller.spec.ts                             
+├── pub.controller.ts                                  
+└── ratelimit                                          # rate limit middleware
     ├── ratelimit-ip.middleware.service.ts             # private token ratelimit
     ├── ratelimit-token.middleware.service.ts          # public ip ratelimit
     ├── ratelimit.middleware.service.ts                # reusable base class / base service
