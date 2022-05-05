@@ -1,7 +1,11 @@
+# Task
+
+See [TEST-TASK.md](./TEST-TASK.md)
+
 # How to Run locally
 
-[//]: # (TODO: Docker)
-[//]: # (TODO: config)
+[//]: # (TODO: Docker, production like setup)
+[//]: # (TODO: config, locayion)
 [//]: # (TODO: tests point by point)
 [//]: # (TODO: style formatting)
 [//]: # (TODO: Readme - howto)
